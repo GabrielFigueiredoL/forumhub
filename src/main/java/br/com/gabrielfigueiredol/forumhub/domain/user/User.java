@@ -28,4 +28,11 @@ public class User {
     private List<Topic> topics = new ArrayList<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
+
+    public User(CreateUserDTO userData) {
+        this.name = userData.name();
+        this.email = userData.email();
+        this.password = userData.password();
+    }
+
 }
