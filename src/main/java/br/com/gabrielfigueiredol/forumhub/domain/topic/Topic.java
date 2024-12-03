@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class Topic {
     private Long id;
     private String title;
     private String message;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private Boolean status;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
