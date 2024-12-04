@@ -1,9 +1,6 @@
 package br.com.gabrielfigueiredol.forumhub.controller;
 
-import br.com.gabrielfigueiredol.forumhub.domain.user.CreateUserDTO;
-import br.com.gabrielfigueiredol.forumhub.domain.user.User;
-import br.com.gabrielfigueiredol.forumhub.domain.user.UserDTO;
-import br.com.gabrielfigueiredol.forumhub.domain.user.UserRepository;
+import br.com.gabrielfigueiredol.forumhub.domain.user.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +33,20 @@ public class UserController {
     public ResponseEntity deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity updateUser(@RequestBody @Valid UpdateUserDTO userData) {
+        User user = userRepository.getReferenceById(userData.id());
+        user.updateUser(userData);
+
+        return ResponseEntity.ok(new UserDTO(user));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getUser(@PathVariable Long id) {
+        User user = userRepository.getReferenceById(id);
+        return ResponseEntity.ok(new UserDTO(user));
     }
 }

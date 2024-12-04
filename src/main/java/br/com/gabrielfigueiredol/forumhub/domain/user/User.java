@@ -35,4 +35,17 @@ public class User {
         this.password = userData.password();
     }
 
+    public void updateUser(UpdateUserDTO userData) {
+        if (userData.name() != null) {
+            this.name = userData.name();
+        }
+
+        if (userData.email() != null) {
+            this.email = userData.email();
+        }
+
+        if (userData.password() != null) {
+            this.password = userData.password();
+        }
+    }
 }
