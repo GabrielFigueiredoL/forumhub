@@ -21,7 +21,13 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private CourseCategory category;
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Topic> topics = new ArrayList<>();
+
+    public Course(CreateCourseDTO courseData) {
+        this.name = courseData.name();
+        this.category = courseData.category();
+    }
 }
