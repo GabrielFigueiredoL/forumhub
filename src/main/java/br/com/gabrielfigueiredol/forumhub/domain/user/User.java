@@ -2,6 +2,7 @@ package br.com.gabrielfigueiredol.forumhub.domain.user;
 
 import br.com.gabrielfigueiredol.forumhub.domain.reply.Reply;
 import br.com.gabrielfigueiredol.forumhub.domain.topic.Topic;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

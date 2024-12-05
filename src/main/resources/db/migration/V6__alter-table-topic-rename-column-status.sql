@@ -1,0 +1,1 @@
+ALTER TABLE topics RENAME COLUMN status TO open_topic;

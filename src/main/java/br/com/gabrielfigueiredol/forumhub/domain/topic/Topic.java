@@ -3,6 +3,8 @@ package br.com.gabrielfigueiredol.forumhub.domain.topic;
 import br.com.gabrielfigueiredol.forumhub.domain.course.Course;
 import br.com.gabrielfigueiredol.forumhub.domain.reply.Reply;
 import br.com.gabrielfigueiredol.forumhub.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -26,7 +28,7 @@ public class Topic {
     private String title;
     private String message;
     private LocalDateTime createdAt;
-    private Boolean status;
+    private Boolean openTopic;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
@@ -35,4 +37,13 @@ public class Topic {
     private User user;
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
+
+    public Topic(CreateTopicDTO topicData, Course course, User user) {
+        this.title = topicData.title();
+        this.message = topicData.message();
+        this.createdAt = LocalDateTime.now();
+        this.openTopic = true;
+        this.user = user;
+        this.course = course;
+    }
 }
