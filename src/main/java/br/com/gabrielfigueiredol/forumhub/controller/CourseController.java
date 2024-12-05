@@ -30,7 +30,7 @@ public class CourseController {
         return ResponseEntity.created(uri).body(new CourseDTO(course));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getCourse(@PathVariable Long id) {
         Course course = courseRepository.getReferenceById(id);
         return ResponseEntity.ok(new CourseDTO(course));
