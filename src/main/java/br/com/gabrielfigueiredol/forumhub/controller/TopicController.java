@@ -2,10 +2,7 @@ package br.com.gabrielfigueiredol.forumhub.controller;
 
 import br.com.gabrielfigueiredol.forumhub.domain.course.Course;
 import br.com.gabrielfigueiredol.forumhub.domain.course.CourseRepository;
-import br.com.gabrielfigueiredol.forumhub.domain.topic.CreateTopicDTO;
-import br.com.gabrielfigueiredol.forumhub.domain.topic.Topic;
-import br.com.gabrielfigueiredol.forumhub.domain.topic.TopicDTO;
-import br.com.gabrielfigueiredol.forumhub.domain.topic.TopicRepository;
+import br.com.gabrielfigueiredol.forumhub.domain.topic.*;
 import br.com.gabrielfigueiredol.forumhub.domain.user.User;
 import br.com.gabrielfigueiredol.forumhub.domain.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -19,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("topics")
@@ -35,9 +34,16 @@ public class TopicController {
 
     @Transactional
     @PostMapping
-    public ResponseEntity createTopic(@RequestBody @Valid CreateTopicDTO topicData, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity createTopic(@RequestBody @Valid CreateTopicDTO topicData, UriComponentsBuilder uriComponentsBuilder) throws SQLIntegrityConstraintViolationException {
         Course course = courseRepository.getReferenceById(topicData.course_id());
         User user = userRepository.getReferenceById(topicData.user_id());
+
+        Optional<Topic> existTitle = topicRepository.findByTitle(topicData.title());
+        Optional<Topic> existMessage = topicRepository.findByMessage(topicData.message());
+
+        if (existMessage.isPresent() || existTitle.isPresent()) {
+            throw new SQLIntegrityConstraintViolationException("Duplicate entry");
+        }
 
         Topic topic = new Topic(topicData, course, user);
         topicRepository.save(topic);
@@ -58,5 +64,28 @@ public class TopicController {
     public ResponseEntity<Page<TopicDTO>> getTopics(@PageableDefault(size = 10, sort = {"createdAt"})Pageable pageable) {
         var page = topicRepository.findAll(pageable).map(TopicDTO::new);
         return ResponseEntity.ok(page);
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity editTopic(@RequestBody @Valid UpdateTopicDTO topicData) throws SQLIntegrityConstraintViolationException {
+        Topic topic = topicRepository.getReferenceById(topicData.id());
+        Optional<Topic> existTitle = topicRepository.findByTitle(topicData.title());
+        Optional<Topic> existMessage = topicRepository.findByMessage(topicData.message());
+
+        if (existMessage.isPresent() || existTitle.isPresent()) {
+            throw new SQLIntegrityConstraintViolationException("Duplicate entry");
+        }
+
+        topic.updateTopic(topicData);
+
+        return ResponseEntity.ok().body(new TopicDTO(topic));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity deleteTopic(@PathVariable Long id) {
+        topicRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

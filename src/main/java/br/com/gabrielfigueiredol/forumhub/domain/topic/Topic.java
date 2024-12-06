@@ -46,4 +46,16 @@ public class Topic {
         this.user = user;
         this.course = course;
     }
+
+    public void updateTopic(UpdateTopicDTO topicDTO) {
+        if (topicDTO.title() != null) {
+            this.title = topicDTO.title();
+        }
+        if (topicDTO.message() != null) {
+            this.message = topicDTO.message();
+        }
+        if (topicDTO.openTopic() != null) {
+            this.openTopic = topicDTO.openTopic();
+        }
+    }
 }
