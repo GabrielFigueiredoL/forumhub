@@ -1,12 +1,17 @@
 package br.com.gabrielfigueiredol.forumhub.infra.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ExceptionHandlerController {
@@ -30,5 +35,18 @@ public class ExceptionHandlerController {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity handleBadRequest(HttpMessageNotReadableException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidValue(SQLIntegrityConstraintViolationException exception) {
+        Map<String, Object> responseBody = new HashMap<>();
+        if (exception.getMessage().contains("foreign key constraint")) {
+            responseBody.put("message", "O registro informado é inválido. Verifique os dados enviados.");
+        } else if (exception.getMessage().contains("Duplicate entry")) {
+            responseBody.put("message", "Tópico duplicado.");
+        } else {
+            responseBody.put("message", "Erro de integridade de dados.");
+        }
+        return new ResponseEntity<>(responseBody, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
