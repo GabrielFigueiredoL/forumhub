@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -17,10 +18,14 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping
     @Transactional
     public ResponseEntity createUser(@RequestBody @Valid CreateUserDTO userData, UriComponentsBuilder uriComponentsBuilder) {
         User user = new User(userData);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
         URI uri = uriComponentsBuilder.path("/users/{id}").buildAndExpand(user.getId()).toUri();
