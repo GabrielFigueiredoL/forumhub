@@ -4,6 +4,7 @@ import br.com.gabrielfigueiredol.forumhub.domain.course.Course;
 import br.com.gabrielfigueiredol.forumhub.domain.course.CourseDTO;
 import br.com.gabrielfigueiredol.forumhub.domain.course.CourseRepository;
 import br.com.gabrielfigueiredol.forumhub.domain.course.CreateCourseDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("courses")
+@SecurityRequirement(name = "bearer-key")
 public class CourseController {
 
     @Autowired

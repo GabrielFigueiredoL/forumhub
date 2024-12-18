@@ -1,6 +1,7 @@
 package br.com.gabrielfigueiredol.forumhub.controller;
 
 import br.com.gabrielfigueiredol.forumhub.domain.user.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
@@ -42,6 +44,7 @@ public class UserController {
 
     @PutMapping
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity updateUser(@RequestBody @Valid UpdateUserDTO userData) {
         User user = userRepository.getReferenceById(userData.id());
         user.updateUser(userData);
@@ -50,6 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity getUser(@PathVariable Long id) {
         User user = userRepository.getReferenceById(id);
         return ResponseEntity.ok(new UserDTO(user));

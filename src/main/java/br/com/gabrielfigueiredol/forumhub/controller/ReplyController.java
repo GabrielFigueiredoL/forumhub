@@ -8,6 +8,7 @@ import br.com.gabrielfigueiredol.forumhub.domain.topic.Topic;
 import br.com.gabrielfigueiredol.forumhub.domain.topic.TopicRepository;
 import br.com.gabrielfigueiredol.forumhub.domain.user.User;
 import br.com.gabrielfigueiredol.forumhub.domain.user.UserRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/topics/{topic_id}/replies")
+@SecurityRequirement(name = "bearer-key")
 public class ReplyController {
 
     @Autowired

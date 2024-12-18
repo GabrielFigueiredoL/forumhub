@@ -5,6 +5,7 @@ import br.com.gabrielfigueiredol.forumhub.domain.course.CourseRepository;
 import br.com.gabrielfigueiredol.forumhub.domain.topic.*;
 import br.com.gabrielfigueiredol.forumhub.domain.user.User;
 import br.com.gabrielfigueiredol.forumhub.domain.user.UserRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("topics")
+@SecurityRequirement(name = "bearer-key")
 public class TopicController {
 
     @Autowired
