@@ -29,4 +29,12 @@ public class Reply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Reply(String message, Topic topic, User user) {
+        this.message = message;
+        this.createdAt = LocalDateTime.now();
+        this.solution = false;
+        this.topic = topic;
+        this.user = user;
+    }
 }
