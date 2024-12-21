@@ -4,6 +4,11 @@ import br.com.gabrielfigueiredol.forumhub.domain.user.AuthenticationDTO;
 import br.com.gabrielfigueiredol.forumhub.domain.user.User;
 import br.com.gabrielfigueiredol.forumhub.infra.security.TokenJwtDTO;
 import br.com.gabrielfigueiredol.forumhub.infra.security.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +31,24 @@ public class AuthenticationController {
     private TokenService tokenService;
 
     @PostMapping
+    @Operation(
+            summary = "Login do usuário",
+            description = "Efetua o login do usuário a partir de email e senha e efetua o processo de autenticação",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK, Usuário logado com sucesso, retornando um token JWT",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = TokenJwtDTO.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbiden, Usuário não encontrado"
+                    )
+            }
+    )
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO loginData) {
         var token = new UsernamePasswordAuthenticationToken(loginData.email(), loginData.password());
         Authentication authentication = authenticationManager.authenticate(token);
